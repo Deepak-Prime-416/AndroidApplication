@@ -1,6 +1,7 @@
 package com.example.androidapplication;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.example.androidapplication.model.Fragment;
 import com.example.androidapplication.model.FragmentAdapter;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView fragmentRV;
     TextView textView;
     FragmentAdapter fragmentAdapter;
+    Button playButton;
+    Iterator itr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +71,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        fragmentArrayList.add(new Fragment("Fragment1",45,30));
-        fragmentArrayList.add(new Fragment("Fragment2",50,30));
-        fragmentArrayList.add(new Fragment("Fragment3",60,30));
-        fragmentArrayList.add(new Fragment("Fragment4",70,30));
+        playButton = findViewById(R.id.btnPlay);
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onButtonClickPlayTimer(fragmentArrayList);
+            }
+        });
+
+        fragmentArrayList.add(new Fragment("Fragment1",10,5));
+        fragmentArrayList.add(new Fragment("Fragment2",10,5));
+//        fragmentArrayList.add(new Fragment("Fragment3",60,30));
+//        fragmentArrayList.add(new Fragment("Fragment4",70,30));
 
         fragmentAdapter = new FragmentAdapter(fragmentArrayList);
         LinearLayoutManager linearLayoutManager =
@@ -81,6 +93,42 @@ public class MainActivity extends AppCompatActivity {
         fragmentRV.setAdapter(fragmentAdapter);
 
         textView.setText("Total : " + String.valueOf(fragmentAdapter.getItemCount()) + " Fragments");
+    }
+
+    private void onButtonClickPlayTimer(ArrayList<Fragment> fragmentArrayList) {
+        itr = fragmentArrayList.iterator();
+        StartTimer((Fragment)itr.next());
+    }
+
+    private void StartTimer(Fragment fragment) {
+        final int counter;
+        counter = 1000*fragment.getActiveTime();
+        new CountDownTimer(1000*fragment.getActiveTime(),1000){
+            @Override
+            public void onTick(long l) {
+                playButton.setText(fragment.getTitle() + " Running");
+            }
+
+            @Override
+            public void onFinish() {
+                playButton.setText(("Take Rest"));
+                new CountDownTimer(1000*fragment.getRestTime(),1000){
+
+                    @Override
+                    public void onTick(long l) {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        if(itr.hasNext())
+                            StartTimer((Fragment)itr.next());
+                        else
+                            playButton.setText("Play");
+                    }
+                }.start();
+            }
+        }.start();
     }
 
     private void addFragmentToArraylist(PopupWindow popupWindow, View view) {
@@ -101,5 +149,4 @@ public class MainActivity extends AppCompatActivity {
     public void onButtonShowPopupWindowClick(PopupWindow popupWindow, View view) {
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
-
 }
