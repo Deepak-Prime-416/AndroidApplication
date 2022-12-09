@@ -18,14 +18,16 @@
         android:layout_below="@id/recycleFragment"
         android:layout_centerHorizontal="true"
         android:layout_marginHorizontal="20dp"
-        android:text="Add" />
+        android:text="Add"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/fragmentCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="Total : 0 Fragments" />
+        android:text="Total : 0 Fragments"
+        tools:ignore="HardcodedText" />
 
     <Button
         android:id="@+id/btnPlay"
@@ -33,6 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:text="Start"/>
+        android:text="Start"
+        tools:ignore="HardcodedText" />
 
 </RelativeLayout>

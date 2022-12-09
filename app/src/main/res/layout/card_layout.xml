@@ -20,7 +20,8 @@
                 android:padding="10dp"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
-                android:textSize="24dp" />
+                android:textSize="24sp"
+                tools:ignore="HardcodedText" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -34,48 +35,52 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Active"
-                    android:textSize="18dp"
-                    android:layout_marginHorizontal="3dp"/>
+                    android:textSize="18sp"
+                    android:layout_marginHorizontal="3dp"
+                    tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/CountTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="14dp"
+                    android:textSize="14sp"
                     android:text="45"
-                    tools:ignore="TouchTargetSizeCheck"
+                    tools:ignore="HardcodedText,TouchTargetSizeCheck"
                     android:layout_marginHorizontal="3dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sec"
-                    android:textSize="14dp"
-                    android:layout_marginHorizontal="3dp"/>
+                    android:textSize="14sp"
+                    android:layout_marginHorizontal="3dp"
+                    tools:ignore="HardcodedText" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="100dp"
+                    android:layout_marginStart="100dp"
                     android:text="Rest"
-                    android:textSize="18dp"
-                    android:layout_marginRight="3dp"/>
+                    android:textSize="18sp"
+                    android:layout_marginEnd="3dp"
+                    tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/RestTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="14dp"
+                    android:textSize="14sp"
                     android:text="15"
-                    tools:ignore="TouchTargetSizeCheck"
+                    tools:ignore="HardcodedText,TouchTargetSizeCheck"
                     android:layout_marginHorizontal="3dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sec"
-                    android:textSize="14dp"
-                    android:layout_marginHorizontal="3dp"/>
+                    android:textSize="14sp"
+                    android:layout_marginHorizontal="3dp"
+                    tools:ignore="HardcodedText" />
 
             </LinearLayout>
 

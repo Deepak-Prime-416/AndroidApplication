@@ -33,11 +33,13 @@ public class MainActivity extends AppCompatActivity {
     Iterator itr;
     View timerLayoutView;
     PopupWindow timerLayout;
-    CountDownTimer startTimer;
+    CountDownTimer activeTimer;
     CountDownTimer restTimer;
     int activeCounter;
     int restCounter;
-    boolean timerRunning = false;
+    boolean activeTimerRunning = false;
+    boolean restTimerRunning = false;
+    boolean timerPaused  = false;
     TextView countdown;
     TextView currentActivity;
     TextView nextActivity;
@@ -115,33 +117,62 @@ public class MainActivity extends AppCompatActivity {
         pauseButton = timerLayout.getContentView().findViewById(R.id.btnPause);
         resetButton = timerLayout.getContentView().findViewById(R.id.btnReset);
 
+        //---------------------Pause Button in Timer Pop Up-------------------------
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!timerRunning) {
-                    activeTimerStart();
+                if(activeTimerRunning==false && restTimerRunning ==false) {
                     pauseButton.setText("Pause");
-                    timerRunning=true;
-                }else{
-                    pauseButton.setText("Play");
-                    startTimer.cancel();
-                    timerRunning=false;
+                    activeTimerStart();  //Initially Starting the Timer
+                }else if(activeTimerRunning == true) {
+                    if(timerPaused == false){
+                        timerPaused = true;
+                        pauseButton.setText("Resume");
+                        activeTimer.cancel();  //Stoping Active Timer when Paused
+                    }else {
+                        timerPaused = false;
+                        pauseButton.setText("Pause");
+                        activeTimerStart();  //Starting Active Timer when Resumed
+                    }
+                }else if(restTimerRunning == true){
+                    if(timerPaused == false){
+                        timerPaused = true;
+                        pauseButton.setText("Resume");
+                        restTimer.cancel(); //Stoping Rest Timer when Paused
+                    }else {
+                        timerPaused = false;
+                        pauseButton.setText("Pause");
+                        restTimerStart(); //Starting Rest Timer when Resumed
+                    }
                 }
             }
         });
+        //--------------------Reset Button in Timer Pop Up---------------------------
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startTimer.cancel();
-                itr = fragmentArrayList.iterator();
                 countdown.setText("00");
-                timerRunning=false;
+                if(!(activeTimerRunning || restTimerRunning)){
+                    timerLayout.dismiss();
+                }else if(activeTimerRunning){
+                    activeTimer.cancel();
+                }else if(restTimerRunning){
+                    restTimer.cancel();
+                }
+                activeTimerRunning=false;
+                restTimerRunning = false;
+                itr = fragmentArrayList.iterator();
+                pauseButton.setText("Play");
+                resetButton.setText("Close");
                 StartTimer((Fragment) itr.next());
             }
         });
     }
 
     private void onButtonClickPlayTimer(ArrayList<Fragment> fragmentArrayList) {
+        countdown.setText("00");
+        pauseButton.setText("Play");
+        resetButton.setText("Reset");
         itr = fragmentArrayList.iterator();
         StartTimer((Fragment) itr.next());
     }
@@ -154,12 +185,14 @@ public class MainActivity extends AppCompatActivity {
             nextActivity.setText(fragmentArrayList.get(fragmentArrayList.indexOf(fragment) + 1).getTitle());
         else
             nextActivity.setText("Last Activity");
-        if(timerRunning)
+        if(activeTimerRunning)
             activeTimerStart();
     }
 
     private void activeTimerStart(){
-        startTimer = new CountDownTimer(1000 * activeCounter, 1000) {
+        restTimerRunning = false;
+        activeTimerRunning = true;
+        activeTimer = new CountDownTimer(1000 * activeCounter, 1000) {
             @Override
             public void onTick(long l) {
                 activeCounter = (int)(l+1000)/1000;
@@ -169,12 +202,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 currentActivity.setText("Take Rest");
+                restTimerRunning = true;
+                activeTimerRunning = false;
                 restTimerStart();
             }
         }.start();
     }
 
     private void restTimerStart(){
+        restTimerRunning = true;
+        activeTimerRunning = false;
         restTimer = new CountDownTimer(1000 * restCounter, 1000) {
             @Override
             public void onTick(long l) {
@@ -184,10 +221,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                if (itr.hasNext())
+                if (itr.hasNext()) {
+                    activeTimerRunning = true;
+                    restTimerRunning = false;
                     StartTimer((Fragment) itr.next());
-                else
-                    timerLayout.dismiss();
+                }else {
+                    activeTimerRunning = false;
+                    restTimerRunning = false;
+                }
             }
         }.start();
     }
